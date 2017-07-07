@@ -1,3 +1,5 @@
+//use to see what each request info item is
+
 const http = require('http')
 const port = process.env.PORT || 4000
 
