@@ -1,6 +1,15 @@
 const express = require('express')
 const app = express()
-const { filter, find, toLower, pathOr, compose } = require('ramda')
+const {
+  filter,
+  find,
+  toLower,
+  pathOr,
+  compose,
+  split,
+  head,
+  last
+} = require('ramda')
 
 const teams = [
   {
@@ -76,10 +85,17 @@ const teams = [
 ]
 
 app.get('/teams', function(req, res) {
-  const conferenceSearch = pathOr(null, ['query', 'conference'], req)
+  const myFilter = pathOr('N/A', ['query', 'filter'], req)
+  console.log('filter', myFilter)
+  const splitFilter = split(':', myFilter)
+  console.log('splitFilter', splitFilter)
+  const filterName = head(splitFilter)
+  console.log('filterName', filterName)
+  const filterValue = last(splitFilter)
+  console.log('filterValue', filterValue)
 
-  const isConference = team => team.conference === conferenceSearch
-  if (conferenceSearch != null) {
+  const isConference = team => team[filterName] === filterValue
+  if (filterValue != 'N/A') {
     const result = compose(filter(isConference))(teams)
     res.send(result)
   } else {
